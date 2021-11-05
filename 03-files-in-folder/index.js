@@ -1,6 +1,4 @@
 // Данные должны быть выведены в формате <имя файла>-<расширение файла>-<вес файла>. Пример: example - txt - 128.369kb
-
-const fs = require('fs');
 const fsPromises = require('fs/promises');
 const path = require('path')
 
@@ -11,7 +9,7 @@ async function readDir() {
     for (const file of files) {
         if (!file.isFile()) continue;
         
-        filePath = path.join(secretFolder, file.name);        
+        const filePath = path.join(secretFolder, file.name);        
         const obj = path.parse(filePath)
         const stat = await fsPromises.stat(filePath, function(err, stat) {
             return stat; 
