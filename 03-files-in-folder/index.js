@@ -4,14 +4,18 @@ const path = require('path')
 
 const secretFolder = path.join(__dirname, './secret-folder');
 
-async function readDir() {
-    const files = await fsPromises.readdir(secretFolder, {withFileTypes: true});
+readDir(secretFolder);
+
+// ------------
+async function readDir(folder) {
+    const files = await fsPromises.readdir(folder, {withFileTypes: true});
     for (const file of files) {
         if (!file.isFile()) continue;
         
-        const filePath = path.join(secretFolder, file.name);        
+        const filePath = path.join(folder, file.name);        
         const obj = path.parse(filePath)
         const stat = await fsPromises.stat(filePath, function(err, stat) {
+            if (err) throw err;
             return stat; 
         })
 
@@ -20,5 +24,3 @@ async function readDir() {
         console.log(`${obj.name} - ${obj.ext.replace('.', '')} - ${sizeKb}kb`)
     }
 }
-
-readDir()

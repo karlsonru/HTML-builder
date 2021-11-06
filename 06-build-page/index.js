@@ -10,7 +10,8 @@ const fsPromises = require('fs/promises')
 const path = require('path')
 
 const projectDist = path.join(__dirname, 'project-dist');
-fsPromises.mkdir(projectDist, {recursive : true});
+async () => await fsPromises.rm(projectDist, {force: true, recursive: true});
+async () => await fsPromises.mkdir(projectDist, {recursive : true});
 
 // Копирование assets
 const assets = path.join(__dirname, './assets');
@@ -64,6 +65,7 @@ async function getTemplates(from) {
 }
 
 async function copyFiles(from, dest) {
+    await fsPromises.rm(dest, {force: true, recursive: true});
     await fsPromises.mkdir(dest, {recursive : true});
     const files = await fsPromises.readdir(from, {withFileTypes: true});
     for (const file of files) {        

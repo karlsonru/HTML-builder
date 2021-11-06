@@ -5,6 +5,9 @@ const path = require('path')
 const styles = path.join(__dirname, './styles');
 const bundle = path.join(__dirname, './project-dist/bundle.css');
 
+uniteStyles(styles, bundle);
+
+// ----------------------
 async function uniteStyles(from, dest) {
     const bundle = fs.createWriteStream(dest, {flags: 'w'});
     const files = await fsPromises.readdir(from, {withFileTypes: true});
@@ -23,5 +26,3 @@ async function uniteStyles(from, dest) {
         readable.pipe(bundle);
     }
 }
-
-uniteStyles(styles, bundle)
