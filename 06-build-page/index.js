@@ -9,28 +9,33 @@ const fs = require('fs')
 const fsPromises = require('fs/promises')
 const path = require('path')
 
-const projectDist = path.join(__dirname, 'project-dist');
-async () => await fsPromises.rm(projectDist, {force: true, recursive: true});
-async () => await fsPromises.mkdir(projectDist, {recursive : true});
+const projectDist = path.join(__dirname, './project-dist');
 
-// Копирование assets
-const assets = path.join(__dirname, './assets');
-const assetsCopy = path.join(projectDist, './assets');
-
-copyFiles(assets, assetsCopy);
-
-// Сбор styles в единый style
-const styles = path.join(__dirname, './styles');
-const bundle = path.join(projectDist, './style.css');
-
-uniteStyles(styles, bundle)
-
-// Запись в новый html + сбор компонентов
-const htmlFrom = path.join(__dirname, './template.html');
-const htmlDest = path.join(projectDist, './index.html');
-copyHtml(htmlFrom, htmlDest);
+builder(projectDist);
 
 // ---------------------------------------------
+async function builder(projectDist) {
+    await fsPromises.rm(projectDist, {force: true, recursive: true});
+    await fsPromises.mkdir(projectDist, {recursive : true});
+
+    // Копирование assets
+    const assets = path.join(__dirname, './assets');
+    const assetsCopy = path.join(projectDist, './assets');
+
+    await copyFiles(assets, assetsCopy);
+
+    // Сбор styles в единый style
+    const styles = path.join(__dirname, './styles');
+    const bundle = path.join(projectDist, './style.css');
+
+    await uniteStyles(styles, bundle)
+
+    // Запись в новый html + сбор компонентов
+    const htmlFrom = path.join(__dirname, './template.html');
+    const htmlDest = path.join(projectDist, './index.html');
+    await copyHtml(htmlFrom, htmlDest);
+}
+
 async function copyHtml(from, dest) {
     const templatesPath = path.join(__dirname, './components');
 
